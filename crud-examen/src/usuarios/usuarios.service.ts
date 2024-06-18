@@ -46,8 +46,6 @@ export class UsuariosService {
     throw new BadRequestException(error.message);
   }
   }
-
-
   public async findAll() {
     try{
       const usuarios = await this.usuarioRepository.find()
@@ -72,10 +70,26 @@ export class UsuariosService {
       } else{
         return{
           statusCode: 400,
-          msg: "El usuarios no existe"
+          msg: "El usuario no existe"
         }
       }
     } catch(error){
+      return new BadRequestException(error)
+    }
+  }
+
+  public async findOneByUsername(username: string) {
+    try{
+      const user = await this.usuarioRepository.findOneBy({usuario: username})
+      if (user) {
+        return user
+      } else {
+        return {
+          statusCode: 400,
+          msg: "El usuario no existe"
+        }
+      }
+    } catch (error) {
       return new BadRequestException(error)
     }
   }
@@ -105,34 +119,5 @@ export class UsuariosService {
     }
   }
 
-public async login(usuario: string, contraseña: string) {
-  try{
-    let match : any
-    let id : any
-    const users = await this.usuarioRepository.find()
-    for (let user of users) {
-      if (usuario === user.usuario) {
-        match = await this.comparePasswords(contraseña, user.contraseña)
-        if(match){
-          id = user.id
-        }
-      }
-    }
-    if(!match){
-      return {
-        statusCode: 401,
-        msg: "Credenciales incorrectas"
-      }
-    }
-    const payload = { sub: id, usuario:usuario};
-    /* const token = this.authService.generateToken({ username, sub: id }) */
-    return {
-        statusCode: 200,
-        msg: "Inicio de sesión exitoso",
-        /* token */
-      }
-    } catch (error) {
-    return new BadRequestException(error)
-  }
-}
+
 }
