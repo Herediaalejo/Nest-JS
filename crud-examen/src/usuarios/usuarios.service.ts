@@ -79,21 +79,6 @@ export class UsuariosService {
       return new BadRequestException(error)
     }
   }
-  public async findOneByUsername(usuario: string) {
-    try{
-      const Usuario = await this.usuarioRepository.findOneBy({usuario: usuario})
-      if (Usuario) {
-        return Usuario
-      } else {
-        return {
-          statusCode: 400,
-          msg: "El usuario no existe"
-        }
-      }
-    } catch (error) {
-      return new BadRequestException(error)
-    }
-  }
 
 
   public async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
